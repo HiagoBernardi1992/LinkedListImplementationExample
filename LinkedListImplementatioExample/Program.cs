@@ -2,121 +2,135 @@
 
 namespace LinkedListImplementatioExample
 {
-    public class Node
-    {
-        public int? Value { get; set; }
-        public LinkedList? Next { get; set; }
-
-        public Node(int value)
-        {
-            Value = value;
-        }
-    }
+    
     public class LinkedList
     {
-        public Node root { get; set; }
-        public LinkedList()
+        public int Value { get; set; }
+        public LinkedList Next { get; set; }
+        private LinkedList()
         {
 
+        }
+        public LinkedList(int value)
+        {
+            Value = value;
         }
 
         public void Add(int value)
         {
-            if (root == null)
+            var newNode = new LinkedList(value);
+            if (Next == null)
             {
-                root = new Node(value);
+                Next = newNode;
             }
             else
             {
-                Node toAdd = new Node(value);
-                Node current = root;
+                var current = Next;
                 while (current.Next != null)
                 {
-                    current = current.Next.root;
+                    current = current.Next;
                 }
 
-                current.Next.root = toAdd;
+                current.Next = newNode;
             }
         }
 
-        public void AddAtPosition(int position, int value)
-        {
-            Node current = root;
-            if (position == 1)
-            {
-                root.Value = value;
-                root.Next.root = current;
-            } else
-            {
-                int i = 1;
-                while (i < position)
-                {
-                    current = current.Next.root;
-                    if (current.Value == null)
-                        break;
-                    i++;
-                }
-                current.Value = value;
-            }            
-        }
 
         public void PrintAll()
         {
-            var current = root;
-            while (current.Value != null)
+            Console.WriteLine(Value);
+            var current = Next;
+            while (current != null)
             {
-                Console.WriteLine(current.Value.ToString());
-                current = current.Next.root;
+                Console.WriteLine(current.Value);
+                current = current.Next;
             }
         }
 
         public void PrintAtPosition(int position)
         {
-            Node current = root;
-            int i = 0;
-            while(i < position)
+            if(position <= 1)
+                Console.WriteLine(Value.ToString());
+            else
             {
-                if(!current.Value.HasValue)
+                var current = Next;
+                int i = 0;
+                while (i < position)
                 {
-                    Console.WriteLine("Don't have any item in this position");
-                    break;
+                    if(current.Next == null)
+                    {
+                        break;
+                    }
+                    current = current.Next;
+                    i++;
                 }
-                current = current.Next.root;
+                Console.WriteLine(current.Value.ToString());
             }
-            Console.WriteLine(current.Value.ToString());
         }
 
         public void DeleteLast()
         {
-            var current = root;
-            while(current.Next != null)
+            var current = this;
+            while (current.Next != null)
             {
-                current = current.Next.root;
+                current = current.Next;
             }
-            current.Next = null;
-            current.Value = null;
+            current = new LinkedList();
         }
 
         public void DeleteAtPosition(int position)
         {
-            Node current = root;
-            Node past;
             int i = 0;
-            while(i < position)
+            var current = this;
+            while (i < position)
             {
-                if (!current.Value.HasValue)
+                if (this.Next == null)
                 {
                     break;
                 }
-                current = current.Next.root;
+                current = current.Next;
+                i++;
             }
-            current = current.Next.root;
+            current = new LinkedList();
+        }
+
+        public void Reverse()
+        {
+            if (this == null || this.Next == null)
+                return;
+
+            //example 1, 2, 3, 4, 5
+            var head = this;
+            var first = head;
+            var second = head.Next;
+            while (second != null)
+            {
+                var temp = second.Next;
+                //here comes the reverse
+                //pass the first node to be the second            
+                second.Next = first;
+                //pass the second to firts to interate
+                first = second;
+                // and the second to be the third
+                second = temp;
+            }
+            head.Next = null;
+            head = first;
         }
     }
     internal class Program
     {
         static void Main(string[] args)
         {
+            LinkedList head = new LinkedList(10);
+            head.Add(11);
+            head.PrintAtPosition(1);
+            head.Add(12);
+            head.Add(13);
+            head.Add(14);
+            head.PrintAtPosition(4);
+            head.PrintAtPosition(100); // it will return the last item
+            head.PrintAll();
         }
     }
 }
